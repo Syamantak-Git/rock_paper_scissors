@@ -11,44 +11,53 @@ function rock_paper_scissor(choice) {
     return gesture[choice];
 }
 function play(playerChoice, computerChoice) {
-    let playerGesture = rock_paper_scissor(playerChoice);
-    let computerGesture = rock_paper_scissor(computerChoice);
-    let result;
     let winner = "";
     if ((playerChoice + 1) % 3 == computerChoice) {
-        result = `You Win, ${playerGesture} beats ${computerGesture}.\n`;
         winner = "player";
     } else if (playerChoice == computerChoice) {
-        result = "Tie";
+        winner = "Tie";
     } else {
-        result = `You Lose, ${computerGesture} beats ${playerGesture}.\n`;
         winner = "computer"
     }
-    console.log(result);
     return winner;
 }
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-    for (let i = 0; i < 5; i++) {
-        let playerGesture = prompt("enter rock, paper or scissor").toLowerCase();
-        let playerChoice = getPlayerChoice(playerGesture);
-        let computerChoice = getComputerChoice();
-        let winner = play(playerChoice, computerChoice);
-        //console.log(i);
-        if (winner == "player") {
-            playerScore++;
-        } else if (winner == "computer") {
-            computerScore++;
-        }
+let playerScore = 0;
+let computerScore = 0;
+
+function game(gesture) {
+    
+    let playerGesture = gesture;
+    let playerChoice = getPlayerChoice(playerGesture);
+    let computerChoice = getComputerChoice();
+    let winner = play(playerChoice, computerChoice);
+    //console.log(i);
+    if (winner == "player") {
+        playerScore++;
+    } else if (winner == "computer") {
+        computerScore++;
     }
-    if (playerScore > computerScore) {
-        console.log("Player Wins");
-    } else if (computerScore > playerScore) {
-        console.log("Computer Wins");
+    const curRound = document.querySelector(".curRound");
+    curRound.innerText = `player: ${rock_paper_scissor(playerChoice)} \n computer ${rock_paper_scissor(computerChoice)} \n winner: ${winner}`;
+    const score = document.querySelector(".score");
+    score.innerText = `pScore ${playerScore} \n cScore ${computerScore}`;
+    const overallWinner = document.querySelector(".overallWinner");
+    if (playerScore == 5 || computerScore == 5) {
+        if (playerScore > computerScore) {
+            overallWinner.innerText = "Player Wins";
+        } else if (computerScore > playerScore) {
+            overallWinner.innerText = "Computer Wins";
+        } 
+        playerScore = 0;
+        computerScore = 0;
     } else {
-        console.log("TIE b/w Computer and Player");
+        overallWinner.innerText = "";
     }
 }
-game();
+
+const playroundBtns = document.querySelector(".playround");
+playroundBtns.addEventListener("click", (e) => {
+    if (e.target.nodeName == "BUTTON") {
+        game(e.target.innerText);
+    }
+});
